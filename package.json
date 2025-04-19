@@ -19,7 +19,6 @@
     "pino": "^9.3.2",
     "path": "^0.12.7",
     "phone" : "3.1.50",
-    "body-parser": "^1.20.2",
     "ovl_wa_baileys": "^1.0.1",
     "path": "^0.12.7",
     "fs-extra": "latest",
