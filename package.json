@@ -2,11 +2,7 @@
     "name": "OVL-web",
     "version": "0.0.1",
     "description": "whatsapp pair code and Qr-code generator by Ainz",
-    "main": "./index.js",
-      "engines" : { 
-    "npm" : ">=9.7.2",
-    "node" : "20.x"
-    },
+    "main": "index.js",
     "scripts": {
     "Ovl": "pm2 start index.js --attach --name ovl"
   },
