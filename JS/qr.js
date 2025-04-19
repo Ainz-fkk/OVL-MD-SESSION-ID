@@ -24,9 +24,11 @@ app.get('/', async (req, res) => {
   await ovl(req, res);
 });
 
-async function ovl(req, res) {
+async function ovl(req, res, disconnect = false) {
   const sessionDir = path.join(__dirname, '../session');
-  if (!fs.existsSync(sessionDir)) fs.mkdirSync(sessionDir);
+  if (!disconnect && !fs.existsSync(sessionDir)) {
+    fs.mkdirSync(sessionDir);
+  }
 
   const { state, saveCreds } = await useMultiFileAuthState(sessionDir);
 
@@ -56,7 +58,7 @@ async function ovl(req, res) {
   sock.ev.on('connection.update', async (update) => {
     const { connection, lastDisconnect, qr } = update;
 
-    if (qr) {
+    if (qr && !disconnect) {
       try {
         const qrDataURL = await toDataURL(qr, qrOptions);
         const data = qrDataURL.split(',')[1];
@@ -107,7 +109,7 @@ async function ovl(req, res) {
 function reconnect(reason, req, res) {
   if ([DisconnectReason.connectionLost, DisconnectReason.connectionClosed, DisconnectReason.restartRequired].includes(reason)) {
     console.log('Connexion perdue, reconnexion en cours...');
-    ovl(req, res);
+    ovl(req, res, true);
   } else {
     console.log(`Déconnecté ! Motif : ${reason}`);
     if (sock) sock.end();
