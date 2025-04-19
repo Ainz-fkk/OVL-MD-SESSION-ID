@@ -113,6 +113,7 @@ function reconnect(reason, req, res) {
   } else {
     console.log(`Déconnecté ! Motif : ${reason}`);
     if (sock) sock.end();
+    fs.rmSync(sessionDir, { recursive: true, force: true });
   }
 }
 
