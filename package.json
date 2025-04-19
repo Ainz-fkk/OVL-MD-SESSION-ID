@@ -1,5 +1,5 @@
 {
-  "name": "OVLMDSESSION-ID",
+  "name": "OVL_MD_SESSION-ID",
   "version": "0.0.1",
   "description": "whatsapp pair code and Qr-code generator by Ainz",
   "main": "index.js",
