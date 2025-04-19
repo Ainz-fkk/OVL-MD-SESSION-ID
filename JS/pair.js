@@ -97,7 +97,7 @@ function reconnect(reason, num, res) {
     ovl(num, res, true);
   } else {
     console.log(`Déconnecté ! Motif : ${reason}`);
-   // if (sock) sock.end();
+    if (sock) sock.end();
     if (fs.existsSync(sessionDir)) fs.rmSync(sessionDir, { recursive: true, force: true });
   }
 }
