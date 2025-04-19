@@ -19,6 +19,7 @@ const app = express.Router();
 const PORT = process.env.PORT || 3000;
 
 let sock;
+const sessionDir = path.join(__dirname, '../session');
 
 app.get('/', async (req, res) => {
   await ovl(req, res);
@@ -106,15 +107,15 @@ async function ovl(req, res, disconnect = false) {
   });
 }
 
-function reconnect(reason, req, res) {
-  if ([DisconnectReason.connectionLost, DisconnectReason.connectionClosed, DisconnectReason.restartRequired].includes(reason)) {
-    console.log('Connexion perdue, reconnexion en cours...');
-    ovl(req, res, true);
-  } else {
-    console.log(`Déconnecté ! Motif : ${reason}`);
-    if (sock) sock.end();
-    fs.rmSync(sessionDir, { recursive: true, force: true });
-  }
+function reconnect(reason, num, res) {
+  if ([DisconnectReason.connectionLost, DisconnectReason.connectionClosed, DisconnectReason.restartRequired].includes(reason)) {
+    console.log('Connexion perdue, reconnexion en cours...');
+    ovl(num, res, true);
+  } else {
+    console.log(`Déconnecté ! Motif : ${reason}`);
+    if (sock) sock.end();
+    if (fs.existsSync(sessionDir)) fs.rmSync(sessionDir, { recursive: true, force: true });
+  }
 }
 
 module.exports = app;
