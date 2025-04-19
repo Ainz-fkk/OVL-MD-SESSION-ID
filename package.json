@@ -1,0 +1,27 @@
+{
+    "name": "OVL-web",
+    "version": "0.0.1",
+    "description": "whatsapp pair code and Qr-code generator by Ainz",
+    "main": "./index.js",
+      "engines" : { 
+    "npm" : ">=9.7.2",
+    "node" : "20.x"
+    },
+    "scripts": {
+    "Ovl": "pm2 start index.js --attach --name ovl"
+  },
+  "author": "Ainz",
+  "license": "MIT",
+  "dependencies": {
+    "qrcode": "^1.5.4",
+    "awesome-phonenumber": "^6.10.0",
+    "axios": "^1.8.4",
+    "pino": "^9.3.2",
+    "path": "^0.12.7",
+    "phone" : "3.1.50",
+    "body-parser": "^1.20.2",
+    "ovl_wa_baileys": "^1.0.1",
+    "path": "^0.12.7",
+    "fs-extra": "latest",
+    "express": "^4.19.2"
+   },
