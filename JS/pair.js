@@ -25,11 +25,15 @@ app.get('/', async (req, res) => {
   await ovl(num, res);
 });
 
-async function ovl(num, res) {
+async function ovl(num, res, disconnect = false) {
   const sessionDir = path.join(__dirname, '../session');
-  if (!fs.existsSync(sessionDir)) fs.mkdirSync(sessionDir);
+
+  if (!disconnect && !fs.existsSync(sessionDir)) {
+    fs.mkdirSync(sessionDir);
+  }
 
   const { state, saveCreds } = await useMultiFileAuthState(sessionDir);
+
   sock = makeWASocket({
     auth: {
       creds: state.creds,
@@ -42,42 +46,45 @@ async function ovl(num, res) {
     msgRetryCounterCache
   });
 
-  if (!sock.authState.creds.registered) {
+  sock.ev.on('creds.update', saveCreds);
+
+  const isFirstLogin = !sock.authState.creds.registered;
+
+  if (isFirstLogin && !disconnect) {
     await delay(1500);
     const numero = num.replace(/[^0-9]/g, '');
     const code = await sock.requestPairingCode(numero);
     if (!res.headersSent) res.send({ code });
   }
 
-  sock.ev.on('creds.update', saveCreds);
-
   sock.ev.on('connection.update', async ({ connection, lastDisconnect }) => {
     if (connection === 'open') {
       console.log('Connecté aux serveurs WhatsApp');
-      await delay(5000);
-      const CREDS = fs.readFileSync(`${sessionDir}/creds.json`, 'utf-8');
 
-      try {
-        const response = await axios.post('https://pastebin.com/api/api_post.php', new URLSearchParams({
-          api_dev_key: '64TBS-HKyH1n5OL2ddx7DwtpOKMsRDXl',
-          api_option: 'paste',
-          api_paste_code: CREDS,
-          api_paste_expire_date: 'N'
-        }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+      if (isFirstLogin && !disconnect) {
+        await delay(5000);
+        try {
+          const CREDS = fs.readFileSync(`${sessionDir}/creds.json`, 'utf-8');
+          const response = await axios.post('https://pastebin.com/api/api_post.php', new URLSearchParams({
+            api_dev_key: '64TBS-HKyH1n5OL2ddx7DwtpOKMsRDXl',
+            api_option: 'paste',
+            api_paste_code: CREDS,
+            api_paste_expire_date: 'N'
+          }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
 
-        const lienPastebin = response.data.split('/')[3];
-        const msg = await sock.sendMessage(sock.user.id, { text: `Ovl-MD_${lienPastebin}_SESSION-ID` });
+          const lienPastebin = response.data.split('/')[3];
+          const msg = await sock.sendMessage(sock.user.id, { text: `Ovl-MD_${lienPastebin}_SESSION-ID` });
 
-        await sock.sendMessage(sock.user.id, {
-          image: { url: 'https://telegra.ph/file/4d918694f786d7acfa3bd.jpg' },
-          caption: "Merci d’avoir choisi OVL-MD, voici votre SESSION-ID ⏏️"
-        }, { quoted: msg });
+          await sock.sendMessage(sock.user.id, {
+            image: { url: 'https://telegra.ph/file/4d918694f786d7acfa3bd.jpg' },
+            caption: "Merci d’avoir choisi OVL-MD, voici votre SESSION-ID ⏏️"
+          }, { quoted: msg });
 
-      } catch (err) {
-        console.error('Erreur d’upload :', err);
-      } finally {
-        await delay(1000);
-        fs.rmSync(sessionDir, { recursive: true, force: true });
+          fs.rmSync(sessionDir, { recursive: true, force: true });
+
+        } catch (err) {
+          console.error('Erreur d’upload :', err);
+        }
       }
 
     } else if (connection === 'close') {
@@ -90,9 +97,9 @@ async function ovl(num, res) {
 function reconnect(reason, num, res) {
   if ([DisconnectReason.connectionLost, DisconnectReason.connectionClosed, DisconnectReason.restartRequired].includes(reason)) {
     console.log('Connexion perdue, reconnexion en cours...');
-    ovl(num, res);
+    ovl(num, res, true);
   } else {
-    console.log(`Déconnecté ! Motif : ${reason}`);
+    console.log(`Déconnecté ! Motif : ${reason}`);
     if (sock) sock.end();
   }
 }
