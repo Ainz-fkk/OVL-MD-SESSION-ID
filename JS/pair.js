@@ -18,6 +18,7 @@ const msgRetryCounterCache = new NodeCache();
 const PORT = process.env.PORT || 3000;
 
 let sock;
+const sessionDir = path.join(__dirname, '../session');
 
 app.get('/', async (req, res) => {
   const num = req.query.number;
@@ -26,7 +27,6 @@ app.get('/', async (req, res) => {
 });
 
 async function ovl(num, res, disconnect = false) {
-  const sessionDir = path.join(__dirname, '../session');
 
   if (!disconnect && !fs.existsSync(sessionDir)) {
     fs.mkdirSync(sessionDir);
@@ -92,14 +92,14 @@ async function ovl(num, res, disconnect = false) {
 }
 
 function reconnect(reason, num, res) {
-  if ([DisconnectReason.connectionLost, DisconnectReason.connectionClosed, DisconnectReason.restartRequired].includes(reason)) {
-    console.log('Connexion perdue, reconnexion en cours...');
-    ovl(num, res, true);
-  } else {
-    console.log(`Déconnecté ! Motif : ${reason}`);
-    if (sock) sock.end();
-    fs.rmSync(sessionDir, { recursive: true, force: true });
-  }
+  if ([DisconnectReason.connectionLost, DisconnectReason.connectionClosed, DisconnectReason.restartRequired].includes(reason)) {
+    console.log('Connexion perdue, reconnexion en cours...');
+    ovl(num, res, true);
+  } else {
+    console.log(`Déconnecté ! Motif : ${reason}`);
+    if (sock) sock.end();
+    if (fs.existsSync(sessionDir)) fs.rmSync(sessionDir, { recursive: true, force: true });
+  }
 }
 
 module.exports = app;
