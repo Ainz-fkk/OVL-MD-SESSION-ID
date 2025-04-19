@@ -4,7 +4,7 @@
   "description": "whatsapp pair code and Qr-code generator by Ainz",
   "main": "index.js",
   "scripts": {
-    "Ovl": "node index.js"
+    "Ovl": "pm2 start index.js --attach --name ovl"
   },
   "author": "Ainz",
   "license": "MIT",
@@ -15,6 +15,7 @@
     "fs-extra": "latest",
     "ovl_wa_baileys": "^1.0.1",
     "phone": "3.1.59",
+    "pm2": "^6.0.5",
     "pino": "^9.6.0",
     "qrcode": "^1.5.4"
   }
