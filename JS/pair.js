@@ -61,7 +61,6 @@ async function ovl(num, res, disconnect = false) {
     if (connection === 'open') {
       console.log('Connecté aux serveurs WhatsApp');
 
-      if (isFirstLogin && !disconnect) {
         await delay(5000);
         try {
           const CREDS = fs.readFileSync(`${sessionDir}/creds.json`, 'utf-8');
@@ -85,8 +84,6 @@ async function ovl(num, res, disconnect = false) {
         } catch (err) {
           console.error('Erreur d’upload :', err);
         }
-      }
-
     } else if (connection === 'close') {
       const reason = lastDisconnect?.error?.output?.statusCode;
       reconnect(reason, num, res);
