@@ -3,6 +3,7 @@ const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 const pino = require("pino");
+const NodeCache = require('node-cache');
 const {
   default: makeWASocket,
   useMultiFileAuthState,
@@ -10,11 +11,11 @@ const {
   makeCacheableSignalKeyStore,
   DisconnectReason,
   Browsers,
-  msgRetryCounterCache
 } = require("ovl_wa_baileys");
 const { toDataURL } = require('qrcode');
+const msgRetryCounterCache = new NodeCache();
 
-const app = express();
+const app = express.Router();
 const PORT = process.env.PORT || 3000;
 
 let sock;
