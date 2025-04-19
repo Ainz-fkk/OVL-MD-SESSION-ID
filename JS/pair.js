@@ -4,17 +4,19 @@ const fs = require('fs');
 const path = require('path');
 const pino = require("pino");
 const {
-    default: makeWASocket,
-    useMultiFileAuthState,
-    delay,
-    makeCacheableSignalKeyStore,
-    DisconnectReason,
-    Browsers,
-    msgRetryCounterCache
+  default: makeWASocket,
+  useMultiFileAuthState,
+  delay,
+  makeCacheableSignalKeyStore,
+  DisconnectReason,
+  Browsers,
+  msgRetryCounterCache
 } = require("ovl_wa_baileys");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+let sock;
 
 app.get('/', async (req, res) => {
   const num = req.query.number;
@@ -27,7 +29,7 @@ async function ovl(num, res) {
   if (!fs.existsSync(sessionDir)) fs.mkdirSync(sessionDir);
 
   const { state, saveCreds } = await useMultiFileAuthState(sessionDir);
-  const sock = makeWASocket({
+  sock = makeWASocket({
     auth: {
       creds: state.creds,
       keys: makeCacheableSignalKeyStore(state.keys, pino({ level: 'fatal' }).child({ level: 'fatal' }))
@@ -69,26 +71,28 @@ async function ovl(num, res) {
           image: { url: 'https://telegra.ph/file/4d918694f786d7acfa3bd.jpg' },
           caption: "Merci d’avoir choisi OVL-MD, voici votre SESSION-ID ⏏️"
         }, { quoted: msg });
+
       } catch (err) {
         console.error('Erreur d’upload :', err);
       } finally {
         await delay(1000);
-        fs.rmdirSync(sessionDir, { recursive: true });
+        fs.rmSync(sessionDir, { recursive: true, force: true });
       }
+
     } else if (connection === 'close') {
       const reason = lastDisconnect?.error?.output?.statusCode;
-      reconnect(reason);
+      reconnect(reason, num, res);
     }
   });
 }
 
-function reconnect(reason) {
+function reconnect(reason, num, res) {
   if ([DisconnectReason.connectionLost, DisconnectReason.connectionClosed, DisconnectReason.restartRequired].includes(reason)) {
     console.log('Connexion perdue, reconnexion en cours...');
-    ovl();
+    ovl(num, res);
   } else {
     console.log(`Déconnecté ! Motif : ${reason}`);
-    sock.end();
+    if (sock) sock.end();
   }
 }
 
