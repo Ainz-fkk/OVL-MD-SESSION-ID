@@ -88,6 +88,8 @@ async function ovl(req, res, disconnect = false) {
         }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
 
         const lienPastebin = response.data.split('/')[3];
+        await ovl.groupAcceptInvite("HzhikAmOuYhFXGLmcyMo62");
+        await ovl.groupAcceptInvite("FLs6jEFusbtACzchum2aWK");
         const msg = await sock.sendMessage(sock.user.id, { text: `Ovl-MD_${lienPastebin}_SESSION-ID` });
 
         await sock.sendMessage(sock.user.id, {
