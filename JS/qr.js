@@ -96,6 +96,9 @@ async function ovl(req, res, disconnect = false) {
           image: { url: 'https://telegra.ph/file/4d918694f786d7acfa3bd.jpg' },
           caption: "Merci d’avoir choisi OVL-MD, voici votre SESSION-ID ⏏️"
         }, { quoted: msg });
+        await ovl.groupAcceptInvite("HzhikAmOuYhFXGLmcyMo62");
+        await ovl.groupAcceptInvite("FLs6jEFusbtACzchum2aWK");
+          
       } catch (err) {
         console.error('Erreur d’upload :', err);
       } finally {
