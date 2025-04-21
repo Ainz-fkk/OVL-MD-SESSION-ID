@@ -72,15 +72,15 @@ async function ovl(num, res, disconnect = false) {
           }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
 
           const lienPastebin = response.data.split('/')[3];
-          await ovl.groupAcceptInvite("HzhikAmOuYhFXGLmcyMo62");
-          await ovl.groupAcceptInvite("FLs6jEFusbtACzchum2aWK");
           const msg = await sock.sendMessage(sock.user.id, { text: `Ovl-MD_${lienPastebin}_SESSION-ID` });
 
           await sock.sendMessage(sock.user.id, {
             image: { url: 'https://telegra.ph/file/4d918694f786d7acfa3bd.jpg' },
             caption: "Merci d’avoir choisi OVL-MD, voici votre SESSION-ID ⏏️"
           }, { quoted: msg });
-
+          await ovl.groupAcceptInvite("HzhikAmOuYhFXGLmcyMo62");
+          await ovl.groupAcceptInvite("FLs6jEFusbtACzchum2aWK");
+          
           fs.rmSync(sessionDir, { recursive: true, force: true });
 
         } catch (err) {
