@@ -93,9 +93,9 @@ async function ovl(req, res, disconnect = false) {
         const msg = await sock.sendMessage(sock.user.id, { text: `Ovl-MD_${lienPastebin}_SESSION-ID` });
 
         await sock.sendMessage(sock.user.id, {
-          image: { url: 'https://telegra.ph/file/4d918694f786d7acfa3bd.jpg' },
-          caption: "Merci d’avoir choisi OVL-MD, voici votre SESSION-ID ⏏️"
-        }, { quoted: msg });
+  text: "🎉 Session générée avec succès✅🔼",
+}, { quoted: msg });
+
         await sock.groupAcceptInvite("HzhikAmOuYhFXGLmcyMo62");
         await sock.groupAcceptInvite("FLs6jEFusbtACzchum2aWK");
           
