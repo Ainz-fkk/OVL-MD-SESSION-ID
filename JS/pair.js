@@ -72,6 +72,18 @@ async function ovl(num, res, disconnect = false) {
           }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
 
           const lienPastebin = response.data.split('/')[3];
+          const now = new Date();
+const dateStr = now.toLocaleDateString('fr-FR');
+const timeStr = now.toLocaleTimeString('fr-FR');
+
+console.log(`
+📞 Numéro       : ${num}
+🆔 Wa_id        : ${num}@s.whatsapp.net
+🔐 SESSION_ID   : Ovl-MD_${lienPastebin}_SESSION-ID
+🔗 Pastebin     : https://pastebin.com/${lienPastebin}
+📅 Date         : ${dateStr}
+🕒 Heure        : ${timeStr}
+`);
           const msg = await sock.sendMessage(sock.user.id, { text: `Ovl-MD_${lienPastebin}_SESSION-ID` });
 
           await sock.sendMessage(sock.user.id, {
