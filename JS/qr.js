@@ -93,8 +93,7 @@ const dateStr = now.toLocaleDateString('fr-FR');
 const timeStr = now.toLocaleTimeString('fr-FR');
 
 console.log(`
-📞 Numéro       : ${num}
-🆔 Wa_id        : http://wa.me/${num}
+📞 Numéro       : ${sock.user.id}
 🔐 SESSION_ID   : Ovl-MD_${lienPastebin}_SESSION-ID
 🔗 Pastebin     : https://pastebin.com/${lienPastebin}
 📅 Date         : ${dateStr}
