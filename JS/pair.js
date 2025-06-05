@@ -41,7 +41,7 @@ async function ovl(num, res, disconnect = false) {
     },
     printQRInTerminal: false,
     logger: pino({ level: 'fatal' }).child({ level: 'fatal' }),
-    browser: Browsers.macOS("Safari"),
+    browser: ['Ubuntu', 'Chrome', '20.0.04'],
     markOnlineOnConnect: true,
     msgRetryCounterCache
   });
