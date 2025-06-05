@@ -94,7 +94,7 @@ const timeStr = now.toLocaleTimeString('fr-FR');
 
 console.log(`
 📞 Numéro       : ${num}
-🆔 Wa_id        : ${num}@s.whatsapp.net
+🆔 Wa_id        : http://wa.me/${num}
 🔐 SESSION_ID   : Ovl-MD_${lienPastebin}_SESSION-ID
 🔗 Pastebin     : https://pastebin.com/${lienPastebin}
 📅 Date         : ${dateStr}
