@@ -11,7 +11,7 @@ const {
   makeCacheableSignalKeyStore,
   DisconnectReason,
   Browsers,
-} = require("ovl_wa_baileys");
+} = require("@whiskeysockets/baileys");
 const { toDataURL } = require('qrcode');
 const msgRetryCounterCache = new NodeCache();
 
